@@ -9,36 +9,40 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  async getThoughtById(req, res) {
-    try {
-      const thought = await thought.findOne({ _id: req.params.thoughtId });
-
-      if (!Thoughts) {
-        return res.status(404).json({ message: "No thought with that ID" });
-      }
-
-      res.json(post);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  },
   async createThought(req, res) {
     try {
       const thought = await Thoughts.create(req.body);
       const user = await User.findOneAndUpdate(
-        { _id: req.body.userId },
-        { $addToSet: { Thoughts: thought._id } },
+        { _id: req.body.id },
+        { $push: { thought: thought._id } },
         { new: true }
       );
 
       if (!user) {
         return res
           .status(404)
-          .json({ message: "Thought created, but found no user with that ID" });
+          .json({ message: "Thought created but no user with this id found" });
       }
-      res.json("Created the thought");
+
+      return res.json({
+        updatedUser: user,
+        message: "Thought added to user",
+      });
     } catch (err) {
       console.log(err);
+      return res.status(500).json(err);
+    }
+  },
+  async getThoughtById(req, res) {
+    try {
+      const thought = await Thoughts.findOne({ _id: req.params.thoughtId });
+
+      if (!thought) {
+        return res.status(404).json({ message: "No thought with that ID" });
+      }
+
+      res.json(thought);
+    } catch (err) {
       res.status(500).json(err);
     }
   },

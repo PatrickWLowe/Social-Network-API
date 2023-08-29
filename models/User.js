@@ -1,4 +1,9 @@
 const { Schema, model, Types } = require("mongoose");
+const dayjs = require("dayjs");
+
+function displayTime(time) {
+  dayjs(time).format("MMM DD, YYYY [at] hh:mm:ss a");
+}
 
 const UserSchema = new Schema(
   {
@@ -13,6 +18,11 @@ const UserSchema = new Schema(
       unique: true,
       required: "Please enter your email",
       match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      get: displayTime,
     },
     thoughts: [
       {
