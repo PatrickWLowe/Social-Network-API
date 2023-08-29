@@ -98,6 +98,7 @@ module.exports = {
         { $pull: { reactions: { reactionId: req.params.reactionId } } },
         { new: true }
       );
+      console.log(thought);
 
       if (!thought) {
         return res.status(404).json({ message: "No thought with that ID" });
