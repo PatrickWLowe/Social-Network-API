@@ -1,5 +1,5 @@
 const { Schema, model, Types } = require("mongoose");
-const dayjs = require("dayjs");
+const dateFormat = require("../utils/dateFormat");
 
 function DisplayTime(time) {
   dayjs(time).format("MMM DD, YYYY [at] hh:mm:ss a");
@@ -23,7 +23,7 @@ const ReactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: DisplayTime,
+      get: (timestamp) => dateFormat(timestamp),
     },
   },
   {
@@ -44,7 +44,7 @@ const ThoughtsSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: DisplayTime,
+      get: (timestamp) => dateFormat(timestamp),
     },
     username: {
       type: String,
